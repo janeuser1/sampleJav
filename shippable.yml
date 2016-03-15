@@ -13,21 +13,26 @@ env:
   - globe=qwerty
   - secure: ccJOY+bAPR0MICfKdj/0FcVXuwq19XWwzEDhFVVbBXdfZzXl2mJpvAKfoYkaXQuT5JSREUFBzgXqkg4b/F1dqPzw0WtQRchqmRMQwrHfZCnlcKziOPZpVqJeegk3KB0d/OEX7oyK1P3or9jaB/PcJIf6V3x23niwlFdWhNQaUyEdAWsxgF9Bf4SsYXbhnMrYNBmoepatdW6C+WJrIOTHZAWDKLqCT7w8EapbANt2NES/tV2H4AmFLmHsHqyELwxBZpwtStoCPxZ0d7/h8o94URZtYGbguYQpCmB5KrnIUixLMHlxnP23GzQ4snxDmCzzUqXPN8mCr09Lk5LXVaz/uA==
   
-matrix:
-  include:
-    - jdk: openjdk7
-      env:
-       - M1=one
-       - M2=two
-    - jdk: openjdk6
-      env: foo=bar
-    - jdk: oraclejdk8
-  #exclude:
-   # - jdk: oraclejdk7
-    
-    
-
 build:
+  pre_ci:
+    - docker build -t=shippabledocker/sample-java .
+
+  pre_ci_boot:
+    image_name: shippabledocker/sample-java
+    image_tag: latest
+    pull: false
+    options: '--privileged=true --net=bridge -e FOO=true -e BOO=false'
+
+
   ci:
-    - java -version
-    - echo $key1 and $key2 and $globe
+    - ps -eax
+    - ls -al
+
+  post_ci:
+    - docker push shippabledocker/sample-java
+
+integrations:
+  hub:
+    - integrationName: ship-docker
+      type: docker
+      
