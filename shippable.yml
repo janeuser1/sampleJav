@@ -1,10 +1,11 @@
 # Language setting
-language: java
+language: none
 
 
 # Version number
-jdk: openjdk6
-  #- openjdk7
+jdk: 
+   - openjdk6
+   - openjdk7
  # - oraclejdk7
  # - oraclejdk8
  
